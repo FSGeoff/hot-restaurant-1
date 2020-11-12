@@ -1,5 +1,5 @@
 // Create the front-end (visuals) for home page, reservation form, and reservation views.
-const express = require("express")
+const express = require("express");
 const path = require("path");
 
 const app = express();
@@ -11,78 +11,90 @@ app.use(express.json());
 
 // VIEW ROUTES
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/home.html"));
+  res.sendFile(path.join(__dirname, "/views/home.html"));
+});
+
+app.get("/reserve", function (req, res) {
+  res.sendFile(path.join(__dirname, "/views/reserve.html"));
+});
+
+app.get("/table", function (req, res) {
+  res.sendFile(path.join(__dirname, "/views/table.html"));
+});
+
+app.get("/.res", (req, res) => {
+  res.sendFile(path.join(__dirname, "/views/home.html"));
+});
+
+// API ROUTES
+
+app.get("/api/table", (req, res) => {
+  res.json({
+    reservations: reservations,
+    waitlist: waitlist,
   });
-
-  app.get("/reserve", function(req, res) {
-    res.sendFile(path.join(__dirname, "/views/reserve.html"));
+});
+app.get("/api/config", (req, res) => {
+  res.json({
+    success: true,
   });
-
-  app.get("/table", function(req, res) {
-    res.sendFile(path.join(__dirname, "/views/table.html"));
-  });
-
-
- 
-  app.get("/.res", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/home.html"));
-  });
-
-
-  
-  // API ROUTES
-
-  app.get("/api/table", (req, res) =>{
-    res.json({
-      reservations: reservations,
-      waitlist: waitlist
-    })
-  })
-  app.get("/api/config", (req, res) => {
-    res.json({
-      success: true,
-    });
-  });
+});
 
 const reservations = [
-    {
-        name: "Sally",
-        phoneNumber: "4444444444",
-        email: "sally@gmail.com",
-        id: "Sal"
-    }
+  {
+    name: "Sally Reservation",
+    phoneNumber: "4444444444",
+    email: "sally@gmail.com",
+    id: "Sal",
+  },
 ];
 
 const waitlist = [
-    {
-        name: "Sally",
-        phoneNumber: "4444444444",
-        email: "email",
-        id: "id"
-    }
+  {
+    name: "Bob Waitlist",
+    phoneNumber: "4444444444",
+    email: "email",
+    id: "id",
+  },
 ];
 
+
+
 app.get("/api/reservations", (req, res) => {
-    res.json(reservations);
-  });
+  res.json(reservations);
+});
 
-  app.get("/api/waitlist", (req, res) => {
-    res.json(waitlist);
-  });
+app.get("/api/waitlist", (req, res) => {
+  res.json(waitlist);
+});
 
-  app.get("/api/reservations/:name", (req, res) => {
-    for (let i = 0; i < reservations.length; i++) {
-      if (reservations[i].name === req.params.name) {
-        return res.json(reservations[i]);
-      }
+app.get("/api/reservations/:name", (req, res) => {
+  for (let i = 0; i < reservations.length; i++) {
+    if (reservations[i].name === req.params.name) {
+      return res.json(reservations[i]);
     }
-  });
+  }
+});
+
+app.post("/api/reservations", function (req, res) {
+  // reservations.push(req.body);
+  if(reservations.length < 5){
+    reservations.push(req.body)
+  }else {
+    waitlist.push(req.body)}
+  res.json(reservations);
+});
+
+app.post("/api/waitlist", function (req, res) {
+  waitlist.push(req.body);
+  res.json(waitlist);
+});
+
+
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-  });
-
-
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 // * Create a basic server using Express.JS
 
@@ -105,4 +117,4 @@ app.listen(PORT, () => {
 // API (build for any routes an express server with 5 basic steps.)
 // View Table
 // View Waitlist
-// Create Reservations 
+// Create Reservations
