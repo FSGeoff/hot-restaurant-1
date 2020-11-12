@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// VIEW ROUTES
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "/views/home.html"));
   });
@@ -21,11 +22,22 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "/views/table.html"));
   });
 
+
+ 
   app.get("/.res", (req, res) => {
     res.sendFile(path.join(__dirname, "/views/home.html"));
   });
+
+
   
   // API ROUTES
+
+  app.get("/api/table", (req, res) =>{
+    res.json({
+      reservations: reservations,
+      waitlist: waitlist
+    })
+  })
   app.get("/api/config", (req, res) => {
     res.json({
       success: true,
@@ -34,17 +46,17 @@ app.get("/", (req, res) => {
 
 const reservations = [
     {
-        name: "name",
-        phoneNumber: "phone number",
-        email: "email",
-        id: "id"
+        name: "Sally",
+        phoneNumber: "4444444444",
+        email: "sally@gmail.com",
+        id: "Sal"
     }
 ];
 
 const waitlist = [
     {
-        name: "name",
-        phoneNumber: "phone number",
+        name: "Sally",
+        phoneNumber: "4444444444",
         email: "email",
         id: "id"
     }
